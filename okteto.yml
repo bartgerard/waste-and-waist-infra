@@ -1,8 +1,11 @@
 name: ww-infra
 
 deploy:
-  - helm repo add bitnami https://charts.bitnami.com/bitnami
-  - helm upgrade --install postgresql bitnami/postgresql
+  # https://artifacthub.io/packages/helm/bitnami/postgresql
+  - helm repo add elastic https://helm.elastic.co
+  - helm upgrade --install elasticsearch elastic/elasticsearch
+  #- helm repo add bitnami https://charts.bitnami.com/bitnami
+  #- helm upgrade --install postgresql bitnami/postgresql
   - kubectl apply -k k8s/app
 
 dev:

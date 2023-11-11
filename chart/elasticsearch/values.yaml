@@ -4,20 +4,11 @@ nodeGroup: "master"
 replicas: 1
 minimumMasterNodes: 1
 
-secret:
-  password: "test123" # generated randomly if not defined
+secret.password: "test123" # generated randomly if not defined
 
-resources:
-  requests:
-    cpu: "1000m"
-    memory: "1Gi"
-  limits:
-    cpu: "1000m"
-    memory: "1Gi"
-
-volumeClaimTemplate:
-  accessModes: ["ReadWriteOnce"]
-  resources:
-    requests:
-      storage: 1Gi
+volumeClaimTemplate.resources.requests.storage: 1Gi
+sysctlInitContainer.enabled: false
+extraEnvs:
+  - name: TZ
+    value: Europe/Brussels
 

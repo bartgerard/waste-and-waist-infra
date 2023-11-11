@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: okteto-port-forwarding
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: okteto-port-forwarding
+  template:
+    metadata:
+      labels:
+        app: okteto-port-forwarding
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+        - name: busybox
+          image: busybox
+          command: [ "tail" ]
+          args: [ "-f", "/dev/null" ]
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 125m
+              memory: "32Mi"
+            limits:
+              cpu: 125m
+              memory: "32Mi"

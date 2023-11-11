@@ -5,6 +5,18 @@ replicas: 1
 master:
   replicas: 1
   heapSize: "512m"
+  nodeSets:
+    - name: default
+      count: 1
+      podTemplate:
+        spec:
+          containers:
+            - name: elasticsearch
+              resources:
+                requests:
+                  storage: 1Gi
+                limits:
+                  storage: 1Gi
 
 data:
   replicas: 1

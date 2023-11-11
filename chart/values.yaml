@@ -1,0 +1,12 @@
+elasticsearch:
+  replicas: 1
+  minimumMasterNodes: 1
+
+  secret.password: "test123" # generated randomly if not defined
+
+  volumeClaimTemplate.resources.requests.storage: 1Gi
+  sysctlInitContainer.enabled: false
+  extraEnvs:
+    - name: TZ
+      value: Europe/Brussels
+

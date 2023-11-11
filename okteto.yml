@@ -1,11 +1,11 @@
-name: ww-infra
+name: waste-and-waist-infra
 
 deploy:
   - helm repo add elastic https://helm.elastic.co
   - helm upgrade --install elasticsearch elastic/elasticsearch -f chart/elasticsearch/values.yaml
   # https://artifacthub.io/packages/helm/bitnami/postgresql
-  #- helm repo add bitnami https://charts.bitnami.com/bitnami
-  #- helm upgrade --install postgresql bitnami/postgresql
+  - helm repo add bitnami https://charts.bitnami.com/bitnami
+  - helm upgrade --install postgresql bitnami/postgresql -f chart/postgresql/values.yaml
   - kubectl apply -k k8s/app
 
 dev:
@@ -14,8 +14,8 @@ dev:
     workdir: /usr/src/app
     command: sh
     forward:
-      - 5432:postgresql:5432
       - 9200:elasticsearch-master:9200
+      - 5432:postgresql:5432
     resources:
       limits:
         cpu: "125m"

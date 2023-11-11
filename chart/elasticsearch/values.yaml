@@ -1,11 +1,8 @@
-clusterName: "elasticsearch"
-nodeGroup: "master"
-
 replicas: 1
 minimumMasterNodes: 1
 
 secret:
-  password: "test123" # generated randomly if not defined
+  password: "Admin123" # generated randomly if not defined
 
 volumeClaimTemplate:
   resources:
@@ -14,7 +11,3 @@ volumeClaimTemplate:
 
 sysctlInitContainer:
   enabled: false
-
-extraEnvs:
-  - name: TZ
-    value: Europe/Brussels

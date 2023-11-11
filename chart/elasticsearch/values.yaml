@@ -1,5 +1,6 @@
 clusterName: "elasticsearch"
 nodeGroup: "master"
+replicaCount: 1
 
 master:
   replicas: 1

@@ -5,10 +5,10 @@ extraEnvs:
   - name: TZ
     value: Europe/Brussels
 
-secret:
-  password: "Admin123" # generated randomly if not defined
+#secret:
+#  password: "Admin123" # generated randomly if not defined
 
-#imageTag: 7.15.0
+imageTag: 7.15.0
 
 resources:
   limits:

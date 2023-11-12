@@ -27,6 +27,7 @@ elasticsearch:
 
 postgresql:
   enabled: true
+  fullnameOverride: postgres
   auth:
     postgresPassword: "Admin123"
     username: "postgres"

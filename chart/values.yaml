@@ -5,7 +5,7 @@ elasticsearch:
   extraEnvs:
     - name: TZ
       value: Europe/Brussels
-  imageTag: 7.15.0
+  imageTag: 8.5.1
   resources:
     limits:
       memory: 3072Mi

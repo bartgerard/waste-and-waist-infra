@@ -23,10 +23,10 @@ volumeClaimTemplate:
       storage: 1Gi
 
 ingress:
-  className: ""
   enabled: true
   annotations:
     dev.okteto.com/generate-host: "true"
+  className: ""
 fullnameOverride: elasticsearch-master
 
 sysctlInitContainer:

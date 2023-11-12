@@ -1,0 +1,22 @@
+elasticsearch:
+  enabled: true
+  replicas: 2
+  minimumMasterNodes: 1
+  extraEnvs:
+    - name: TZ
+      value: Europe/Brussels
+  imageTag: 7.15.0
+  resources:
+    limits:
+      memory: 3072Mi
+    requests:
+      cpu: 20m
+      memory: 1536Mi
+  volumeClaimTemplate.resources.requests.storage: 1Gi
+  ingress:
+    enabled: true
+    annotations:
+      dev.okteto.com/generate-host: "true"
+    className: ""
+  fullnameOverride: elasticsearch-master
+  sysctlInitContainer.enabled: false

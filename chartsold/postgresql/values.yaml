@@ -1,8 +1,0 @@
-global:
-  postgresql:
-  auth:
-    postgresPassword: Admin123
-
-primary:
-  persistence:
-    size: 1Gi

@@ -24,3 +24,6 @@ elasticsearch:
   fullnameOverride: elasticsearch-master
   sysctlInitContainer:
     enabled: false
+
+postgresql:
+  enabled: false

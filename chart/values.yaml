@@ -12,11 +12,15 @@ elasticsearch:
     requests:
       cpu: 20m
       memory: 1536Mi
-  volumeClaimTemplate.resources.requests.storage: 1Gi
+  volumeClaimTemplate:
+    resources:
+      requests:
+        storage: 1Gi
   ingress:
     enabled: true
     annotations:
       dev.okteto.com/generate-host: "true"
     className: ""
   fullnameOverride: elasticsearch-master
-  sysctlInitContainer.enabled: false
+  sysctlInitContainer:
+    enabled: false

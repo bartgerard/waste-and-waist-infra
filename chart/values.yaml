@@ -5,6 +5,8 @@ elasticsearch:
   extraEnvs:
     - name: TZ
       value: Europe/Brussels
+  secret:
+    password: "Admin123"
   imageTag: 8.5.1
   resources:
     limits:

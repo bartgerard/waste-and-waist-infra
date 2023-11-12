@@ -10,7 +10,7 @@ name: waste-and-waist-infra
 # The deploy section defines how to deploy your development environment
 # More info: https://www.okteto.com/docs/reference/manifest/#deploy
 deploy:
-  - helm upgrade --install ww-okteto-infra chart
+  - helm upgrade --install ww-okteto-infra charts/chart
   - kubectl apply -k k8s/app
 
 # The dependencies section defines other git repositories to be deployed as part of your development environment

@@ -26,4 +26,16 @@ elasticsearch:
     enabled: false
 
 postgresql:
-  enabled: false
+  enabled: true
+  auth:
+    postgresPassword: "Admin123"
+    username: "postgres"
+    password: "postgres"
+    database: "ww"
+  primary:
+    persistence:
+      size: 1Gi
+  readReplicas:
+    persistence:
+      size: 1Gi
+

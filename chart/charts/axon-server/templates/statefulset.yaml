@@ -1,0 +1,171 @@
+{{- /* @formatter:off */}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "axon-server.fullname" . }}
+  labels:
+    {{- include "axon-server.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ template "axon-server.name" . }}
+  replicas: {{ .Values.replicaCount }}
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      {{- include "axon-server.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "axon-server.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- end }}
+      serviceAccountName: {{ include "axon-server.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.extraInitContainers }}
+      initContainers:
+        {{- toYaml .Values.extraInitContainers | nindent 8 }}
+      {{- end }}
+      containers:
+        {{- if .Values.extraSidecarContainers }}
+          {{- toYaml .Values.extraSidecarContainers | nindent 8 }}
+        {{- end }}
+        - name: server
+          env:
+            - name: SERVER_PORT
+              value: {{ .Values.service.gui.port | quote }}
+            - name: AXONIQ_AXONSERVER_PORT
+              value: {{ .Values.service.grpc.port | quote }}
+            - name: JAVA_TOOL_OPTIONS
+              value: {{ include "axon-server.finalJvmOptions" . }}
+            - name: AXONIQ_AXONSERVER_EVENT_STORAGE
+              value: "/storage/data"
+            - name: AXONIQ_AXONSERVER_SNAPSHOT_STORAGE
+              value: "/storage/data"
+            - name: AXONIQ_AXONSERVER_CONTROLDB-PATH
+              value: "/storage/data"
+            - name: AXONIQ_AXONSERVER_REPLICATION_LOG-STORAGE-FOLDER
+              value: "/storage/log"
+            - name: AXONIQ_AXONSERVER_ACCESSCONTROL_TOKEN-DIR
+              value: "/storage/security"
+            - name: AXONIQ_AXONSERVER_PID-FILE-LOCATION
+              value: "/storage/data"
+            - name: AXONIQ_AXONSERVER_PLUGIN-PACKAGE-DIRECTORY
+              value: "/storage/data/plugins/bundles"
+            - name: AXONIQ_AXONSERVER_PLUGIN-CACHE-DIRECTORY
+              value: "/storage/data/plugins/cache"
+            - name: LOGGING_FILE
+              value: "/storage/data/axonserver.log"
+            - name: LOGGING_FILE_MAX-HISTORY
+              value: "10"
+            - name: LOGGING_FILE_MAX-SIZE
+              value: "10MB"
+            {{- if not (eq .Values.image.repository "axoniq/axonserver") }}
+            - name: AXONIQ_LICENSE
+              value: "/axonserveree/license/axoniq.license"
+            {{- end }}
+            {{- if .Values.serverDomain }}
+            - name: AXONIQ_AXONSERVER_DOMAIN
+              value:  {{ .Values.serverDomain }}
+            {{- end }}
+            {{- if .Values.config.accessControl.enabled }}
+            - name: AXONIQ_AXONSERVER_ACCESSCONTROL_ENABLED
+              value: "true"
+            - name: AXONIQ_AXONSERVER_ACCESSCONTROL_TOKEN
+              value: {{- .Values.config.accessControl.token }}
+            {{- end }}
+            {{- if .Values.extraEnvs }}
+              {{- toYaml .Values.extraEnvs | nindent 12 }}
+            {{- end }}
+          {{- if (or .Values.postStart .Values.preStop) }}
+          lifecycle:
+            {{- if .Values.postStart }}
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", {{ .Values.postStart | quote }}]
+            {{- end }}
+            {{- if .Values.preStop }}
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", {{ .Values.preStop | quote }}]
+            {{- end }}
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: grpc-port
+              containerPort: {{ .Values.service.grpc.port }}
+              protocol: TCP
+            - name: http-gui
+              containerPort: {{ .Values.service.gui.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/info
+              port: http-gui
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /actuator/info
+              port: http-gui
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 1
+            failureThreshold: 30
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: storage
+              mountPath: /storage
+          {{- if .Values.extraVolumeMounts }}
+            {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: storage
+        emptyDir: {}
+
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: storage
+      spec:
+        accessModes: {{ .Values.persistence.accessModes }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+    {{- if .Values.extraVolumeClaimTemplates }}
+      {{- toYaml .Values.extraVolumeClaimTemplates | nindent 4 }}
+    {{- end }}
+  {{- end }}

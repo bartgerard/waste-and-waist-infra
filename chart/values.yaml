@@ -54,7 +54,7 @@ axon-server:
     # "axoniq/axonserver" is the SE Docker image. Any other (custom) image means that the chart will configure for EE
     repository: axoniq/axonserver
     pullPolicy: IfNotPresent
-    tag: "2023.2.0-dev"
+    tag: "2023.2.1-dev"
   extraEnvs:
     - name: AXONIQ_AXONSERVER_DEVMODE_ENABLED
       value: "true"

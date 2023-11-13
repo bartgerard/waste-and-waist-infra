@@ -40,6 +40,8 @@ dev:
     forward:
       - 9200:elasticsearch-master:9200
       - 5432:postgresql:5432
+      - 8024:axon-server-calendar:8024
+      - 8124:axon-server-calendar-grpc:8124
     resources:
       limits:
         cpu: "125m"

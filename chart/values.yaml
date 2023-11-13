@@ -71,7 +71,7 @@ axon-server:
   persistence:
     enabled: false
     accessModes: [ ReadWriteOnce ]
-    size: 3Gi
+    size: 2Gi
   java:
     jvmOptions:
       timezoneOptions: "-Duser.timezone=Europe/Brussels"

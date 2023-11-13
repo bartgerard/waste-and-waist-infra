@@ -32,7 +32,7 @@ postgresql:
     postgresPassword: "Admin123"
     username: "postgres"
     password: "postgres"
-    database: "ww"
+    database: "postgres"
   primary:
     persistence:
       size: 1Gi

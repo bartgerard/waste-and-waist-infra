@@ -39,9 +39,9 @@ dev:
     command: sh
     forward:
       - 1433:mssql-latest:1433
-      - 9200:elasticsearch-master:9200
       - 8024:axon-server-calendar:8024
       - 8124:axon-server-calendar-grpc:8124
+      - 9200:elasticsearch-master:9200
     resources:
       limits:
         cpu: "125m"

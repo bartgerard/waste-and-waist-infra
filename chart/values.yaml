@@ -84,6 +84,16 @@ axon-server:
 mysql:
   enabled: true
   fullnameOverride: mysql
+  auth:
+    ## @param auth.rootPassword Password for the `root` user. Ignored if existing secret is provided
+    ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mysql#setting-the-root-password-on-first-run
+    rootPassword: "Admin123"
+    createDatabase: true
+    ## @param auth.database Name for a custom database to create
+    ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mysql#creating-a-database-on-first-run
+    database: "ww_database"
+    username: "mysql"
+    password: "mysql"
   resources:
     limits:
       memory: 3072Mi

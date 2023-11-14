@@ -26,7 +26,7 @@ elasticsearch:
     enabled: false
 
 postgresql:
-  enabled: true
+  enabled: false
   fullnameOverride: postgres
   auth:
     postgresPassword: "Admin123"
@@ -80,3 +80,18 @@ axon-server:
     enabled: true
     annotations:
       dev.okteto.com/generate-host: "true"
+
+mssql-latest:
+  enabled: true
+  fullnameOverride: mssql-latest
+  resources:
+    limits:
+      memory: 3072Mi
+    requests:
+      cpu: 5m
+      memory: 1536Mi
+  persistence:
+    dataSize: 1Gi
+    userlogSeparateClaim: false
+    tempSeparateClaim: false
+    userdbSeparateClaim: false

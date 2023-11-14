@@ -90,11 +90,13 @@ mysql:
     requests:
       cpu: 5m
       memory: 1536Mi
-  persistence:
-    dataSize: 1Gi
-    userlogSeparateClaim: false
-    tempSeparateClaim: false
-    userdbSeparateClaim: false
+  primary:
+    persistence:
+      size: 1Gi
+  secondary:
+    persistence:
+      enabled: false
+      size: 1Gi
 
 mssql-latest:
   enabled: false

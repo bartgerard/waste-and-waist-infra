@@ -81,8 +81,23 @@ axon-server:
     annotations:
       dev.okteto.com/generate-host: "true"
 
-mssql-latest:
+mysql:
   enabled: true
+  fullnameOverride: mysql
+  resources:
+    limits:
+      memory: 3072Mi
+    requests:
+      cpu: 5m
+      memory: 1536Mi
+  persistence:
+    dataSize: 1Gi
+    userlogSeparateClaim: false
+    tempSeparateClaim: false
+    userdbSeparateClaim: false
+
+mssql-latest:
+  enabled: false
   fullnameOverride: mssql-latest
   resources:
     limits:

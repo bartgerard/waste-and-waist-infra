@@ -1,0 +1,124 @@
+elasticsearch:
+  enabled: true
+  replicas: 2
+  minimumMasterNodes: 1
+  extraEnvs:
+    - name: TZ
+      value: Europe/Brussels
+  imageTag: 7.17.3
+  resources:
+    limits:
+      memory: 3072Mi
+    requests:
+      cpu: 20m
+      memory: 1536Mi
+  volumeClaimTemplate:
+    resources:
+      requests:
+        storage: 1Gi
+  ingress:
+    enabled: true
+    annotations:
+      dev.okteto.com/generate-host: "true"
+    className: ""
+  fullnameOverride: elasticsearch-master
+  sysctlInitContainer:
+    enabled: false
+
+postgresql:
+  enabled: false
+  fullnameOverride: postgres
+  auth:
+    postgresPassword: "Admin123"
+    username: "postgres"
+    password: "postgres"
+    database: "postgres"
+  primary:
+    persistence:
+      size: 1Gi
+  readReplicas:
+    persistence:
+      size: 1Gi
+
+axon-server:
+  enabled: true
+  fullnameOverride: axon-server
+  resources:
+    limits:
+      memory: 2048Mi
+    requests:
+      cpu: 10m
+      memory: 1024Mi
+  image:
+    # Note: the name of the repository is used throughout the chart to figure if we should configure for SE or EE
+    # "axoniq/axonserver" is the SE Docker image. Any other (custom) image means that the chart will configure for EE
+    repository: axoniq/axonserver
+    pullPolicy: IfNotPresent
+    tag: "4.6.7-dev"
+  extraEnvs:
+    - name: AXONIQ_AXONSERVER_DEVMODE_ENABLED
+      value: "true"
+    - name: AXONIQ_AXONSERVER_METRICS_GRPC_ENABLED
+      value: "true"
+    - name: AXONIQ_AXONSERVER_METRICS_GRPC_PROMETHEUSENABLED
+      value: "true"
+    - name: AXONIQ_AXONSERVER_KEEP-ALIVE-TIME
+      value: "0"
+    - name: AXONIQ_AXONSERVER_KEEP-ALIVE-TIMEOUT
+      value: "604800000"
+    - name: AXONIQ_AXONSERVER_MIN-KEEP-ALIVE-TIME
+      value: "604800000"
+  persistence:
+    enabled: false
+    accessModes: [ ReadWriteOnce ]
+    # size: 3Gi
+    size: 2Gi
+  java:
+    jvmOptions:
+      timezoneOptions: "-Duser.timezone=Europe/Brussels"
+  ingress:
+    enabled: true
+    annotations:
+      dev.okteto.com/generate-host: "true"
+
+mysql:
+  enabled: true
+  fullnameOverride: mysql
+  auth:
+    ## @param auth.rootPassword Password for the `root` user. Ignored if existing secret is provided
+    ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mysql#setting-the-root-password-on-first-run
+    rootPassword: "Admin123"
+    createDatabase: true
+    ## @param auth.database Name for a custom database to create
+    ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mysql#creating-a-database-on-first-run
+    database: "ww_database"
+    username: "mysql"
+    password: "mysql"
+  resources:
+    limits:
+      memory: 3072Mi
+    requests:
+      cpu: 5m
+      memory: 1536Mi
+  primary:
+    persistence:
+      size: 1Gi
+  secondary:
+    persistence:
+      enabled: false
+      size: 1Gi
+
+mssql-latest:
+  enabled: false
+  fullnameOverride: mssql-latest
+  resources:
+    limits:
+      memory: 3072Mi
+    requests:
+      cpu: 5m
+      memory: 1536Mi
+  persistence:
+    dataSize: 1Gi
+    userlogSeparateClaim: false
+    tempSeparateClaim: false
+    userdbSeparateClaim: false

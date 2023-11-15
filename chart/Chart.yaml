@@ -17,3 +17,9 @@ dependencies:
     version: 9.14.3
     repository: https://charts.bitnami.com/bitnami
     condition: mysql.enabled
+  - name: axon-server
+    version: 1.0.0
+    condition: axon-server.enabled
+  - name: mssql-latest
+    version: 0.3.9
+    condition: mssql-latest.enabled
